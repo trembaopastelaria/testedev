@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Trembão Pastelaria - Delivery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        /* Header Mobile-First */
+        .header {
+            background: linear-gradient(135deg, #DC143C 0%, #B22222 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+        background: url("logo_trembao.jpeg") center/cover;
+            margin: 0 auto 10px;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .header-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            backdrop-filter: blur(10px);
+        }
+
+        .rating {
+            color: #FFD700;
+        }
+
+        /* Navigation Mobile */
+        .nav {
+            background: white;
+            padding: 10px;
+            border-bottom: 1px solid #e9ecef;
+            position: sticky;
+            top: 120px;
+            z-index: 99;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-buttons::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 2px solid #DC143C;
+            color: #DC143C;
+            padding: 12px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 0.9em;
+            white-space: nowrap;
+            min-width: fit-content;
+            touch-action: manipulation;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: #DC143C;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Main Content Mobile */
+        .main-content {
+            padding: 15px 10px;
+        }
+
+        /* Cart Mobile - Fixed Bottom */
+        .cart-mobile {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 2px solid #FFA500;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .cart-mobile.show {
+            transform: translateY(0);
+        }
+
+        .cart-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #DC143C, #B22222);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            box-shadow: 0 4px 15px rgba(220,20,60,0.4);
+            cursor: pointer;
+            z-index: 201;
+            touch-action: manipulation;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FFA500;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        /* Product Categories Mobile */
+        .category {
+            margin-bottom: 30px;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            color: #DC143C;
+            margin-bottom: 15px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .products-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 0 5px;
+        }
+
+        /* Product Cards Mobile */
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            display: flex;
+            min-height: 120px;
+        }
+
+        .product-image {
+            width: 120px;
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #DC143C;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        .product-info {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.85em;
+            line-height: 1.3;
+            margin-bottom: 10px;
+            flex: 1;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #DC143C;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #DC143C;
+            background: white;
+            color: #DC143C;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            touch-action: manipulation;
+            transition: all 0.2s ease;
+        }
+
+        .qty-btn:active {
+            background: #DC143C;
+            color: white;
+            transform: scale(0.95);
+        }
+
+        .qty-display {
+            font-weight: bold;
+            min-width: 25px;
+            text-align: center;
+            font-size: 1em;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85em;
+            touch-action: manipulation;
+            transition: all 0.2s ease;
+        }
+
+        .add-to-cart:active {
+            transform: scale(0.95);
+        }
+
+        /* Cart Content */
+        .cart-content {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-title {
+            font-size: 1.3em;
+            color: #DC143C;
+            font-weight: bold;
+        }
+
+        .cart-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            touch-action: manipulation;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .cart-item-price {
+            color: #666;
+            font-size: 0.85em;
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: #dc3545;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 5px;
+            touch-action: manipulation;
+        }
+
+        .cart-total {
+            border-top: 2px solid #FFA500;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .total-final {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #DC143C;
+        }
+
+        /* Checkout Mobile */
+        .checkout-section {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .checkout-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            -webkit-appearance: none;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #FFA500;
+        }
+
+        .delivery-options, .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            touch-action: manipulation;
+        }
+
+        .option-btn.selected {
+            border-color: #FFA500;
+            background: #FFF3E0;
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            width: 100%;
+            margin-top: 15px;
+            touch-action: manipulation;
+            transition: all 0.2s ease;
+        }
+
+        .whatsapp-btn:active {
+            transform: scale(0.98);
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #666;
+            padding: 30px 20px;
+        }
+
+        .empty-cart-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        /* Combos especiais */
+        .combo-card {
+            background: linear-gradient(135deg, #FFA500, #FF6B35);
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .combo-card .product-name {
+            color: white;
+        }
+
+        .combo-card .product-description {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .combo-card .product-price {
+            color: white;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #DC143C;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tablet adjustments */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 768px;
+                margin: 0 auto;
+            }
+
+            .products-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .header-info {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .cart-mobile {
+                position: static;
+                transform: none;
+                border-top: none;
+                box-shadow: none;
+                margin-top: 20px;
+                border-radius: 15px;
+                border: 2px solid #FFA500;
+            }
+
+            .cart-toggle {
+                display: none;
+            }
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1200px;
+            }
+
+            .main-content {
+                display: flex;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .products-section {
+                flex: 2;
+            }
+
+            .cart-section {
+                flex: 1;
+                position: sticky;
+                top: 200px;
+                height: fit-content;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .product-card {
+                flex-direction: column;
+                min-height: auto;
+            }
+
+            .product-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .product-card {
+                border: 2px solid #000;
+            }
+            
+            .nav-btn {
+                border-width: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo"></div>
+            <h1>Trem Bão Pastelaria</h1>
+            <p>Os melhores pastéis da cidade!</p>
+            <div class="header-info">
+                <div class="info-item">
+                    <span>⏰</span>
+                    <span>17:30-23:00</span>
+                </div>
+                <div class="info-item">
+                    <span>🚚</span>
+                    <span>45-60</span>
+                </div>
+                <div class="info-item">
+                    <span class="rating">⭐⭐⭐⭐⭐</span>
+                    <span>4.8</span>
+                </div>
+                <div class="info-item">
+                    <span>📱</span>
+                    <span>(34) 9 8412-7564</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showCategory('salgados')">🥟 Salgados</button>
+                <button class="nav-btn" onclick="showCategory('doces')">🍰 Doces</button>
+                <button class="nav-btn" onclick="showCategory('bebidas')">🥤 Bebidas</button>
+                <button class="nav-btn" onclick="showCategory('combos')">🎯 Combos</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="products-section">
+                <!-- Pastéis Salgados -->
+                <div class="category" id="salgados">
+                    <h2 class="category-title">
+                        <span>🥟</span>
+                        Pastéis Salgados
+                    </h2>
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_carne.jpeg')">
+                                <div class="product-badge">Popular</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel de Carne</h3>
+                                <p class="product-description">Deliciosa carne temperada, queijo derretido e milho fresquinho</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('carne', -1)">-</button>
+                                        <span class="qty-display" id="qty-carne">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('carne', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('carne', 'Pastel de Carne', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_frango.jpeg')">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel de Frango Cremoso</h3>
+                                <p class="product-description">Frango desfiado cremoso, queijo e milho em uma combinação irresistível</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('frango', -1)">-</button>
+                                        <span class="qty-display" id="qty-frango">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('frango', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('frango', 'Pastel de Frango Cremoso', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_mussarela.jpeg')">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel de Mussarela</h3>
+                                <p class="product-description">Clássico pastel com mussarela derretida e saborosa</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('mussarela', -1)">-</button>
+                                        <span class="qty-display" id="qty-mussarela">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('mussarela', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('mussarela', 'Pastel de Mussarela', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_pizza.jpeg')">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel de Pizza</h3>
+                                <p class="product-description">Sabor de pizza no formato de pastel - uma experiência única!</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('pizza', -1)">-</button>
+                                        <span class="qty-display" id="qty-pizza">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('pizza', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('pizza', 'Pastel de Pizza', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_carne_jilo.jpeg')">
+                                <div class="product-badge">Especial</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel Carne com Jiló</h3>
+                                <p class="product-description">Carne temperada, queijo, milho e jiló para um sabor especial</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('carne-jilo', -1)">-</button>
+                                        <span class="qty-display" id="qty-carne-jilo">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('carne-jilo', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('carne-jilo', 'Pastel Carne com Jiló', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_frango_jilo.jpeg')">
+                                <div class="product-badge">Especial</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel Frango com Jiló</h3>
+                                <p class="product-description">Frango cremoso, queijo, milho e jiló em uma combinação especial</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('frango-jilo', -1)">-</button>
+                                        <span class="qty-display" id="qty-frango-jilo">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('frango-jilo', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('frango-jilo', 'Pastel Frango com Jiló', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pastéis Doces -->
+                <div class="category" id="doces" style="display: none;">
+                    <h2 class="category-title">
+                        <span>🍰</span>
+                        Pastéis Doces
+                    </h2>
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_suflair.jpeg')">
+                                <div class="product-badge">Novo</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel de Suflair</h3>
+                                <p class="product-description">Delicioso chocolate Suflair derretido em massa crocante</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('suflair', -1)">-</button>
+                                        <span class="qty-display" id="qty-suflair">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('suflair', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('suflair', 'Pastel de Suflair', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_romeu_julieta.jpeg')">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel Romeu e Julieta</h3>
+                                <p class="product-description">Clássica combinação de queijo e goiabada em massa dourada</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('romeu-julieta', -1)">-</button>
+                                        <span class="qty-display" id="qty-romeu-julieta">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('romeu-julieta', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('romeu-julieta', 'Pastel Romeu e Julieta', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_sonho_valsa.jpeg')">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel Sonho de Valsa</h3>
+                                <p class="product-description">Chocolate Sonho de Valsa derretido para os amantes de chocolate</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('sonho-valsa', -1)">-</button>
+                                        <span class="qty-display" id="qty-sonho-valsa">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('sonho-valsa', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('sonho-valsa', 'Pastel Sonho de Valsa', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('pastel_ouro_branco.jpeg')">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Pastel de Ouro Branco</h3>
+                                <p class="product-description">Chocolate branco Ouro Branco em uma experiência única</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 12,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('ouro-branco', -1)">-</button>
+                                        <span class="qty-display" id="qty-ouro-branco">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('ouro-branco', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('ouro-branco', 'Pastel de Ouro Branco', 12.00)">Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bebidas -->
+                <div class="category" id="bebidas" style="display: none;">
+                    <h2 class="category-title">
+                        <span>🥤</span>
+                        Bebidas
+                    </h2>
+                    <div class="products-grid">
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('coca_220ml.jpeg')">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Coca-Cola 220ml</h3>
+                                <p class="product-description">Refrigerante Coca-Cola gelado - lata 220ml</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 4,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('coca-220', -1)">-</button>
+                                        <span class="qty-display" id="qty-coca-220">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('coca-220', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('coca-220', 'Coca-Cola 220ml', 4.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url("coca_310ml.jpeg")">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Coca-Cola 310ml</h3>
+                                <p class="product-description">Refrigerante Coca-Cola gelado - lata 310ml</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 6,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('coca-310', -1)">-</button>
+                                        <span class="qty-display" id="qty-coca-310">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('coca-310', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('coca-310', 'Coca-Cola 310ml', 6.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url("guarana_antartica.jpeg")">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Guaraná Antártica 350ml</h3>
+                                <p class="product-description">Guaraná Antártica gelado - lata 350ml</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 6,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('guarana-antartica', -1)">-</button>
+                                        <span class="qty-display" id="qty-guarana-antartica">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('guarana-antartica', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('guarana-antartica', 'Guaraná Antártica 350ml', 6.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url("guarana_mineiro.jpeg")">
+                                <div class="product-badge">Econômico</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Guaraná Mineiro 2L</h3>
+                                <p class="product-description">Guaraná Mineiro gelado - garrafa 2 litros</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 10,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('guarana-mineiro', -1)">-</button>
+                                        <span class="qty-display" id="qty-guarana-mineiro">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('guarana-mineiro', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('guarana-mineiro', 'Guaraná Mineiro 2L', 10.00)">Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Combos -->
+                <div class="category" id="combos" style="display: none;">
+                    <h2 class="category-title">
+                        <span>🎯</span>
+                        Combos Especiais
+                    </h2>
+                    <div class="products-grid">
+                        <div class="product-card combo-card">
+                            <div class="product-image" style="background-image: linear-gradient(45deg, #FFA500, #FF6B35), url('pastel_carne.jpeg'); background-blend-mode: overlay;">
+                                <div class="product-badge">Oferta</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Combo Salgado</h3>
+                                <p class="product-description">1 Pastel Salgado + 1 Refrigerante 350ml</p>
+                                <div class="product-footer">
+                                    <div>
+                                        <span class="product-price">R$ 16,00</span>
+                                        <small style="text-decoration: line-through; opacity: 0.8; margin-left: 8px;">R$ 18,00</small>
+                                    </div>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('combo-salgado', -1)">-</button>
+                                        <span class="qty-display" id="qty-combo-salgado">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('combo-salgado', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('combo-salgado', 'Combo Salgado', 16.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card combo-card">
+                            <div class="product-image" style="background-image: linear-gradient(45deg, #FFA500, #FF6B35), url('pastel_suflair.jpeg'); background-blend-mode: overlay;">
+                                <div class="product-badge">Oferta</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Combo Doce</h3>
+                                <p class="product-description">1 Pastel Doce + 1 Refrigerante 350ml</p>
+                                <div class="product-footer">
+                                    <div>
+                                        <span class="product-price">R$ 16,00</span>
+                                        <small style="text-decoration: line-through; opacity: 0.8; margin-left: 8px;">R$ 18,00</small>
+                                    </div>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('combo-doce', -1)">-</button>
+                                        <span class="qty-display" id="qty-combo-doce">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('combo-doce', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('combo-doce', 'Combo Doce', 16.00)">Adicionar</button>
+                            </div>
+                        </div>
+
+                        <div class="product-card combo-card">
+                            <div class="product-image" style="background-image: linear-gradient(45deg, #FFA500, #FF6B35), url('pastel_carne.jpeg'); background-blend-mode: overlay;">
+                                <div class="product-badge">Popular</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Combo Família</h3>
+                                <p class="product-description">3 Pastéis Salgados + 1 Guaraná Mineiro 2L</p>
+                                <div class="product-footer">
+                                    <div>
+                                        <span class="product-price">R$ 40,00</span>
+                                        <small style="text-decoration: line-through; opacity: 0.8; margin-left: 8px;">R$ 46,00</small>
+                                    </div>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('combo-familia', -1)">-</button>
+                                        <span class="qty-display" id="qty-combo-familia">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('combo-familia', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('combo-familia', 'Combo Família', 40.00)">Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Cart -->
+            <div class="cart-section" style="display: none;">
+                <div class="cart-content">
+                    <div class="cart-header">
+                        <h3 class="cart-title">🛒 Seu Pedido</h3>
+                    </div>
+                    <div id="cart-items-desktop">
+                        <div class="empty-cart">
+                            <div class="empty-cart-icon">🛒</div>
+                            <p>Seu carrinho está vazio</p>
+                            <small>Adicione itens para começar seu pedido</small>
+                        </div>
+                    </div>
+                    <div class="cart-total" id="cart-total-desktop" style="display: none;">
+                        <div class="total-line">
+                            <span>Subtotal:</span>
+                            <span id="subtotal-desktop">R$ 0,00</span>
+                        </div>
+                        <div class="total-line">
+                            <span>Taxa de entrega:</span>
+                            <span id="delivery-fee-desktop">R$ 8,00</span>
+                        </div>
+                        <div class="total-line total-final">
+                            <span>Total:</span>
+                            <span id="total-desktop">R$ 8,00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-section" id="checkout-section-desktop" style="display: none;">
+                    <!-- Same checkout form as mobile -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Cart Toggle -->
+        <div class="cart-toggle" onclick="toggleCart()">
+            🛒
+            <div class="cart-badge" id="cart-badge" style="display: none;">0</div>
+        </div>
+
+        <!-- Mobile Cart -->
+        <div class="cart-mobile" id="cart-mobile">
+            <div class="cart-content">
+                <div class="cart-header">
+                    <h3 class="cart-title">🛒 Seu Pedido</h3>
+                    <button class="cart-close" onclick="toggleCart()">×</button>
+                </div>
+                <div id="cart-items">
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <p>Seu carrinho está vazio</p>
+                        <small>Adicione itens para começar seu pedido</small>
+                    </div>
+                </div>
+                <div class="cart-total" id="cart-total" style="display: none;">
+                    <div class="total-line">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">R$ 0,00</span>
+                    </div>
+                    <div class="total-line">
+                        <span>Taxa de entrega:</span>
+                        <span id="delivery-fee">R$ 8,00</span>
+                    </div>
+                    <div class="total-line total-final">
+                        <span>Total:</span>
+                        <span id="total">R$ 8,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Section -->
+            <div class="checkout-section" id="checkout-section" style="display: none;">
+                <h4 class="checkout-title">Finalizar Pedido</h4>
+                
+                <div class="form-group">
+                    <label>Nome Completo:</label>
+                    <input type="text" id="customer-name" placeholder="Seu nome completo">
+                </div>
+
+                <div class="form-group">
+                    <label>Telefone:</label>
+                    <input type="tel" id="customer-phone" placeholder="(11) 99999-9999">
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Entrega:</label>
+                    <div class="delivery-options">
+                        <div class="option-btn selected" onclick="selectDeliveryOption('pickup')">
+                            🏪 Retirada<br><small>Grátis</small>
+                        </div>
+                        <div class="option-btn" onclick="selectDeliveryOption('delivery')">
+                            🚚 Entrega<br><small>R$ 8,00</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="address-group" style="display: none;">
+                    <label>Endereço de Entrega:</label>
+                    <textarea id="customer-address" placeholder="Rua, número, bairro, cidade"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Forma de Pagamento:</label>
+                    <div class="payment-options">
+                        <div class="option-btn selected" onclick="selectPaymentOption('money')">
+                            💵 Dinheiro
+                        </div>
+                        <div class="option-btn" onclick="selectPaymentOption('pix')">
+                            📱 Pix
+                        </div>
+                        <div class="option-btn" onclick="selectPaymentOption('card')">
+                            💳 Cartão
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Observações:</label>
+                    <textarea id="order-notes" placeholder="Alguma observação especial?"></textarea>
+                </div>
+
+                <button class="whatsapp-btn" onclick="sendWhatsAppOrder()">
+                    📱 Enviar Pedido no WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = {};
+        let quantities = {};
+        let deliveryType = 'pickup';
+        let paymentMethod = 'money';
+        let cartVisible = false;
+
+        function showCategory(category) {
+            // Hide all categories
+            document.querySelectorAll('.category').forEach(cat => {
+                cat.style.display = 'none';
+            });
+            
+            // Show selected category
+            document.getElementById(category).style.display = 'block';
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Scroll to top on mobile
+            if (window.innerWidth < 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function changeQuantity(productId, change) {
+            if (!quantities[productId]) quantities[productId] = 0;
+            quantities[productId] = Math.max(0, quantities[productId] + change);
+            document.getElementById('qty-' + productId).textContent = quantities[productId];
+        }
+
+        function addToCart(productId, productName, price) {
+            const quantity = quantities[productId] || 0;
+            if (quantity === 0) {
+                // Show feedback
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Selecione quantidade!';
+                button.style.background = '#dc3545';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+                return;
+            }
+
+            if (cart[productId]) {
+                cart[productId].quantity += quantity;
+            } else {
+                cart[productId] = {
+                    name: productName,
+                    price: price,
+                    quantity: quantity
+                };
+            }
+
+            // Reset quantity display
+            quantities[productId] = 0;
+            document.getElementById('qty-' + productId).textContent = '0';
+
+            // Show success feedback
+            const button = event.target;
+            const originalText = button.textContent;
+            button.innerHTML = '<div class="loading"></div>';
+            setTimeout(() => {
+                button.textContent = 'Adicionado!';
+                button.style.background = '#28a745';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 1000);
+            }, 500);
+
+            updateCartDisplay();
+        }
+
+        function toggleCart() {
+            const cartMobile = document.getElementById('cart-mobile');
+            cartVisible = !cartVisible;
+            
+            if (cartVisible) {
+                cartMobile.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            } else {
+                cartMobile.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const checkoutSection = document.getElementById('checkout-section');
+            const cartBadge = document.getElementById('cart-badge');
+
+            const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+            
+            if (totalItems > 0) {
+                cartBadge.textContent = totalItems;
+                cartBadge.style.display = 'flex';
+            } else {
+                cartBadge.style.display = 'none';
+            }
+
+            if (Object.keys(cart).length === 0) {
+                cartItems.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <p>Seu carrinho está vazio</p>
+                        <small>Adicione itens para começar seu pedido</small>
+                    </div>
+                `;
+                cartTotal.style.display = 'none';
+                checkoutSection.style.display = 'none';
+                return;
+            }
+
+            let html = '';
+            let subtotal = 0;
+
+            for (const [id, item] of Object.entries(cart)) {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${item.quantity}x R$ ${item.price.toFixed(2)}</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <strong>R$ ${itemTotal.toFixed(2)}</strong>
+                            <button class="cart-item-remove" onclick="removeFromCart('${id}')">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            cartItems.innerHTML = html;
+
+            const deliveryFee = deliveryType === 'delivery' ? 8.00 : 0.00;
+            const total = subtotal + deliveryFee;
+
+            document.getElementById('subtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
+            document.getElementById('delivery-fee').textContent = `R$ ${deliveryFee.toFixed(2)}`;
+            document.getElementById('total').textContent = `R$ ${total.toFixed(2)}`;
+
+            cartTotal.style.display = 'block';
+            checkoutSection.style.display = 'block';
+        }
+
+        function removeFromCart(productId) {
+            delete cart[productId];
+            updateCartDisplay();
+        }
+
+        function selectDeliveryOption(type) {
+            deliveryType = type;
+            document.querySelectorAll('.delivery-options .option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+
+            const addressGroup = document.getElementById('address-group');
+            if (type === 'delivery') {
+                addressGroup.style.display = 'block';
+            } else {
+                addressGroup.style.display = 'none';
+            }
+
+            updateCartDisplay();
+        }
+
+        function selectPaymentOption(method) {
+            paymentMethod = method;
+            document.querySelectorAll('.payment-options .option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        function sendWhatsAppOrder() {
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            const address = document.getElementById('customer-address').value;
+            const notes = document.getElementById('order-notes').value;
+
+            if (!name || !phone) {
+                alert('Por favor, preencha nome e telefone!');
+                return;
+            }
+
+            if (deliveryType === 'delivery' && !address) {
+                alert('Por favor, preencha o endereço para entrega!');
+                return;
+            }
+
+            let message = `🥟 *PEDIDO TREMBÃO PASTELARIA* 🥟\n\n`;
+            message += `👤 *Cliente:* ${name}\n`;
+            message += `📱 *Telefone:* ${phone}\n\n`;
+
+            message += `🛒 *ITENS DO PEDIDO:*\n`;
+            let subtotal = 0;
+            for (const [id, item] of Object.entries(cart)) {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                message += `• ${item.quantity}x ${item.name} - R$ ${itemTotal.toFixed(2)}\n`;
+            }
+
+            message += `\n💰 *VALORES:*\n`;
+            message += `Subtotal: R$ ${subtotal.toFixed(2)}\n`;
+            
+            const deliveryFee = deliveryType === 'delivery' ? 8.00 : 0.00;
+            message += `Taxa de entrega: R$ ${deliveryFee.toFixed(2)}\n`;
+            message += `*Total: R$ ${(subtotal + deliveryFee).toFixed(2)}*\n\n`;
+
+            message += `🚚 *ENTREGA:* ${deliveryType === 'delivery' ? 'Entrega' : 'Retirada no balcão'}\n`;
+            if (deliveryType === 'delivery') {
+                message += `📍 *Endereço:* ${address}\n`;
+            }
+
+            message += `💳 *Pagamento:* ${paymentMethod === 'money' ? 'Dinheiro' : paymentMethod === 'pix' ? 'Pix' : 'Cartão'}\n`;
+
+            if (notes) {
+                message += `📝 *Observações:* ${notes}\n`;
+            }
+
+            message += `\n⏰ *Tempo estimado:* 45-60 minutos`;
+
+            const whatsappUrl = `https://wa.me/5534984127564?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Handle responsive layout
+        function handleResize() {
+            const cartSection = document.querySelector('.cart-section');
+            const cartMobile = document.getElementById('cart-mobile');
+            
+            if (window.innerWidth >= 1024) {
+                cartSection.style.display = 'block';
+                cartMobile.classList.remove('show');
+                document.body.style.overflow = '';
+                cartVisible = false;
+            } else {
+                cartSection.style.display = 'none';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showCategory('salgados');
+            handleResize();
+        });
+
+        window.addEventListener('resize', handleResize);
+
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Close cart when clicking outside
+        document.addEventListener('click', function(event) {
+            const cartMobile = document.getElementById('cart-mobile');
+            const cartToggle = document.querySelector('.cart-toggle');
+            
+            if (cartVisible && !cartMobile.contains(event.target) && !cartToggle.contains(event.target)) {
+                toggleCart();
+            }
+        });
+    </script>
+</body>
+</html>
+
