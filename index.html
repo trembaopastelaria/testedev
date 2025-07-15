@@ -905,7 +905,7 @@
                         </div>
 
                         <div class="product-card">
-                            <div class="product-image" style="background-image: url("coca_310ml.jpeg")">
+                            <div class="product-image" style="background-image: url('coca_310ml.jpeg')">
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Coca-Cola 310ml</h3>
@@ -923,7 +923,7 @@
                         </div>
 
                         <div class="product-card">
-                            <div class="product-image" style="background-image: url("guarana_antartica.jpeg")">
+                            <div class="product-image" style="background-image: url('guarana_antartica.jpeg')">
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Guaraná Antártica 350ml</h3>
@@ -941,12 +941,31 @@
                         </div>
 
                         <div class="product-card">
-                            <div class="product-image" style="background-image: url("guarana_mineiro.jpeg")">
+                            <div class="product-image" style="background-image: url('guarana_mineiro.jpeg')">
                                 <div class="product-badge">Econômico</div>
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Guaraná Mineiro 2L</h3>
                                 <p class="product-description">Guaraná Mineiro gelado - garrafa 2 litros</p>
+                                <div class="product-footer">
+                                    <span class="product-price">R$ 10,00</span>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('guarana-mineiro', -1)">-</button>
+                                        <span class="qty-display" id="qty-guarana-mineiro">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('guarana-mineiro', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('guarana-mineiro', 'Guaraná Mineiro 2L', 10.00)">Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> <div class="product-card">
+                            <div class="product-image" style="background-image: url('guarana_mineiro.jpeg')">
+                                <div class="product-badge">Econômico</div>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Coca-Cola 2L</h3>
+                                <p class="product-description">Coca-cola gelada - garrafa 2 litros</p>
                                 <div class="product-footer">
                                     <span class="product-price">R$ 10,00</span>
                                     <div class="quantity-controls">
